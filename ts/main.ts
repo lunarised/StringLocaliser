@@ -10,6 +10,9 @@ const getFiles = (rootDir: string): string[] => {
       const dive = getFiles(path.join(rootDir, subject));
       return dive;
     } else {
+      if (subject.endsWith(".test.tsx") || subject.endsWith(".it-test.tsx")) {
+        return undefined;
+      }
       if (subject.endsWith(".tsx")) {
         return path.join(rootDir, subject);
       } else {
@@ -24,10 +27,7 @@ const getFiles = (rootDir: string): string[] => {
   );
 
   let flatFilePaths = filteredFilePath.reduce((a: string[], b, n) => {
-    if (typeof b === "string") {
-      return a.concat(b);
-    }
-    return a.concat(...b);
+    return a.concat(b);
   }, []);
   return flatFilePaths;
 };
@@ -37,9 +37,13 @@ const myArgs: String[] = process.argv;
 const sourceInput = myArgs[2].toString();
 const sourcePath = path.normalize(sourceInput);
 const doesExist = fs.existsSync(sourcePath);
-
+let count = 0;
 if (doesExist) {
-  console.log(getFiles(sourcePath));
+  getFiles(sourcePath).forEach((line) => {
+    console.log(line);
+    count++;
+  });
+  console.log(count);
 } else {
   console.warn("No Directory found at specified location ", sourcePath);
 }
