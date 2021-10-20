@@ -20,15 +20,13 @@ const getFiles = (rootDir: string): string[] => {
       }
     }
   });
-  let filteredFilePath: (string | string[])[] = filePaths.filter(
+  const filteredFilePath: (string | string[])[] = filePaths.filter(
     (subject): subject is string | string[] => {
       return !!subject;
     }
   );
 
-  let flatFilePaths = filteredFilePath.reduce((a: string[], b, n) => {
-    return a.concat(b);
-  }, []);
+  const flatFilePaths = filteredFilePath.flatMap((a) => a);
   return flatFilePaths;
 };
 
